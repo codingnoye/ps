@@ -1,0 +1,1 @@
+long long sum(int*a,int n){long long r=0;while(n--)r+=a[n];return r;}
