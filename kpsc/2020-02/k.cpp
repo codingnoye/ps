@@ -21,37 +21,23 @@ int solve(int c, int i, int a, int b) {
     int res = 0;
     if (i==1) {
         if (c==0) {
-            if (a>=1) res+=1;
-            if (b>=2) res+=1;
+            if (a>=1) res++;
+            if (b>=2) res++;
         } else if (c==1) {
-            if (b>=1) res+=1;
-        } else {
-            res+=1;
-        }
+            if (b>=1) res++;
+        } else res++;
     } else {
         if (c==0) {
-            if (a>=2) {
-                res += solve(2, i-1, a-2, b);
-            }
+            if (a>=2) res += solve(2, i-1, a-2, b);
             if (a>=1) {
                 res += solve(0, i-1, a-1, b);
-                if (b>=1) {
-                    res += 2*solve(1, i-1, a-1, b-1);
-                }
+                if (b>=1) res += 2*solve(1, i-1, a-1, b-1);
             }
-            if (b>=2) {
-                res += solve(0, i-1, a, b-2);
-            }
+            if (b>=2) res += solve(0, i-1, a, b-2);
         } else if (c==1) {
-            if (b>=1) {
-                res += solve(0, i-1, a, b-1);
-            }
-            if (a>=1) {
-                res += solve(1, i-1, a-1, b);
-            }
-        } else {
-            res += solve(0, i-1, a, b);
-        }
+            if (b>=1) res += solve(0, i-1, a, b-1);
+            if (a>=1) res += solve(1, i-1, a-1, b);
+        } else res += solve(0, i-1, a, b);
     }
     res%=1000;
     dp[c][i].push_back(log(res, a, b));
