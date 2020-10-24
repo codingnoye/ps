@@ -1,0 +1,1 @@
+print(*max(enumerate(map(lambda x:sum(map(int,x.split())),open(0,'r')),1),key=lambda x:x[1]))
