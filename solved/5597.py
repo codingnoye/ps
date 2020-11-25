@@ -1,0 +1,1 @@
+print(*sorted(set(range(1,31))-set(map(int,open(0)))),sep='\n')
