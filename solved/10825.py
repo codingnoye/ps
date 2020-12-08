@@ -1,0 +1,1 @@
+i=int;print(*(y[0]for y in sorted([*map(lambda x:x.split(),open(0))][1:],key=lambda x:[-i(x[1]),i(x[2]),-i(x[3]),x[0]])))
