@@ -1,0 +1,1 @@
+print(*(c.lower()if c<'a'else c.upper()for c in input()),sep='')
