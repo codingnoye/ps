@@ -1,0 +1,1 @@
+print(''.join(chr((ord(c)-42)%26+65)for c in input()))
