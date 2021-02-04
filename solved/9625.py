@@ -1,0 +1,1 @@
+a,b=1,0;exec('a,b=b,b+a;'*int(input()));print(a,b)
