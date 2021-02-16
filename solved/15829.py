@@ -1,0 +1,1 @@
+input();print(sum(map(lambda i:(ord(i[1])-96)*31**i[0],enumerate(input())))%1234567891)
