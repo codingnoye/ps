@@ -1,1 +1,1 @@
-print(sum(a+1!=b for a,b in zip(range(int(input())),map(int,input().split()))))
+input();print(sum(a+1!=int(b)for a,b in enumerate(input().split())))
