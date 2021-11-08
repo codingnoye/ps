@@ -55,34 +55,33 @@ vector<cpx> multiply(vector<cpx> a, vector<cpx> b){
 }
 
 void solve() {
-    string sa, sb; cin>>sa>>sb;
-
-    int sasize = sa.size();
-    int sbsize = sb.size();
-    vector<cpx> A(sasize), B(sbsize);
-    for (int i=0; i<sasize; i++) A[i] = (sa[sasize-1-i])-'0';
-    for (int i=0; i<sbsize; i++) B[i] = (sb[sbsize-1-i])-'0';
-    vector<cpx> C = multiply(A, B);
-    vector<int> D(C.size());
-    for (int i=0; i<C.size(); i++) {
-        int now = (int)C[i].real();
-        D[i] = now;
+    int L1, L2; cin>>L1>>L2;
+    string S1; cin>>S1;
+    string S2; cin>>S2;
+    
+    vector<cpx> UR(L1), UP(L1), US(L1);
+    vector<cpx> LR(L1), LP(L1), LS(L1);
+    for (int i=0; i<L1; i++) {
+        char c = S1.at(i);
+        if (c=='R') UR[i] = 1;
+        else if (c=='P') UP[i] = 1;
+        else US[i] = 1;
     }
-    for (int i=0; i<C.size()-1; i++) {
-        int now = D[i];
-        D[i] = now%10;
-        D[i+1] += now/10;
+    for (int i=0; i<L2; i++) {
+        char c = S2.at(L2-1-i);
+        if (c=='R') LR[i] = 1;
+        else if (c=='P') LP[i] = 1;
+        else LS[i] = 1;
     }
-    bool first = true;
-    for (int i=C.size()-1; i>=0; i--) {
-        if (!(first && D[i]==0)) {
-            cout<<D[i];
-            first = false;
-        } else if (first && i==0) {
-            cout<<D[i];
-        }
+    vector<cpx> RP = multiply(UR, LP);
+    vector<cpx> PS = multiply(UP, LS);
+    vector<cpx> SR = multiply(US, LR);
+    int maxv = -1;
+    for (int i=L2-1; i<L2-1+L1; i++) {
+        int v = (int)RP[i].real() + (int)PS[i].real() + (int)SR[i].real();
+        if (maxv < v) maxv = v;
     }
-    cout<<endl;
+    cout<<maxv<<endl;
 }
 
 int main() {
