@@ -69,26 +69,23 @@ pair<int, int> match(int src, int sink){
 }
 
 void solve() {
-    int N, M; cin>>N>>M;
+    int N, K; cin>>N>>K;
 
-    const int src = 0;
-    const int sink = N+M+1;
-    for (int i=0; i<N; i++) {
-        int t; cin>>t;
-        // 직원: 1 ~ N
-        // 일: N+1 ~ N+M
-        // src = 0
-        // sink = N+M+1
-        for (int j=0; j<t; j++) {
-            int a; cin>>a;
-            add_edge(1+i, N+a, 1, 0);
-        }
+    const int src = 2*N;
+    const int sink = 2*N+1;
+    // 행: 0 ~ N-1
+    // 열: N ~ 2*N-1
+    // src = 2*N
+    // sink = 2*N+1
+    for (int i=0; i<K; i++) {
+        int a, b; cin>>a>>b;
+        add_edge(a-1, N+b-1, 1, 0);
     }
     for (int i=0; i<N; i++) {
-        add_edge(src, 1+i, 2, 0);
+        add_edge(src, i, 1, 0);
     }
-    for (int i=0; i<M; i++) {
-        add_edge(N+1+i, sink, 1, 0);
+    for (int i=0; i<N; i++) {
+        add_edge(N+i, sink, 1, 0);
     }
     auto [mc, mf] = match(src, sink);
     cout<<mf<<endl;
