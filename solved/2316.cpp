@@ -7,7 +7,7 @@ using namespace std;
 #define endl '\n'
 typedef long long ll;
 
-const int MAXN = 2002; // 이거 바꿔야함
+const int MAXN = 900; // 이거 바꿔야함
 struct edg{ int pos, cap, rev, cost; };
 vector<edg> gph[MAXN];
 void clear(){
@@ -69,26 +69,28 @@ pair<int, int> match(int src, int sink){
 }
 
 void solve() {
-    int N, M; cin>>N>>M;
+    int N, P; cin>>N>>P;
 
-    const int src = 0;
-    const int sink = N+M+1;
+    const int src = 2*N;
+    const int sink = 2*N+1;
+    // in node: 0 ~ N-1
+    // out node: N ~ 2*N-1
+    // src = 2*N
+    // sink = 2*N+1;
     for (int i=0; i<N; i++) {
-        int t; cin>>t;
-        // 직원: 1 ~ N
-        // 일: N+1 ~ N+M
-        // src = 0
-        // sink = N+M+1
-        for (int j=0; j<t; j++) {
-            int a; cin>>a;
-            add_edge(1+i, N+a, 1, 0);
-        }
+        add_edge(i, N+i, 1, 0);
     }
-    for (int i=0; i<N; i++) {
-        add_edge(src, 1+i, 2, 0);
-    }
-    for (int i=0; i<M; i++) {
-        add_edge(N+1+i, sink, 1, 0);
+    for (int i=0; i<P; i++) {
+        int a, b; cin>>a>>b;
+        if (a == 1) a = src;
+        else if (a == 2) a = sink;
+        else a = a - 3;
+        if (b == 1) b = src;
+        else if (b == 2) b = sink;
+        else b = b - 3;
+
+        if (a != src && a != sink) add_edge(N+a, b, 1, 0); else add_edge(a, b, 1, 0);
+        if (b != src && b != sink) add_edge(N+b, a, 1, 0); else add_edge(b, a, 1, 0);
     }
     auto [mc, mf] = match(src, sink);
     cout<<mf<<endl;

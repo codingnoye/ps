@@ -7,7 +7,7 @@ using namespace std;
 #define endl '\n'
 typedef long long ll;
 
-const int MAXN = 2002; // 이거 바꿔야함
+const int MAXN = 8000; // 이거 바꿔야함
 struct edg{ int pos, cap, rev, cost; };
 vector<edg> gph[MAXN];
 void clear(){
@@ -68,30 +68,60 @@ pair<int, int> match(int src, int sink){
     return {mc, mf};
 }
 
+bool seat[82][82];
+
+int ptoi(int i, int j) {
+    return 2+i*81+j;
+}
+
 void solve() {
-    int N, M; cin>>N>>M;
 
     const int src = 0;
-    const int sink = N+M+1;
-    for (int i=0; i<N; i++) {
-        int t; cin>>t;
-        // 직원: 1 ~ N
-        // 일: N+1 ~ N+M
-        // src = 0
-        // sink = N+M+1
-        for (int j=0; j<t; j++) {
-            int a; cin>>a;
-            add_edge(1+i, N+a, 1, 0);
+    const int sink = 1;
+
+    // 좌표에서 번호로 변환:
+    // i * 80 + j
+    int T; cin>>T;
+    while (T--) {
+        int N, M; cin>>N>>M;
+        clear();
+        for (int i=0; i<82; i++) {
+            for (int j=0; j<82; j++) {
+                seat[i][j] = 0;
+            }
         }
+        
+        int total = 0;
+        for (int i=0; i<N; i++) {
+            string tmp; cin>>tmp;
+            for (int j=0; j<M; j++) {
+                seat[i][j] = tmp.at(j) == '.';
+                if (seat[i][j]) total++;
+            }
+        }
+        for (int i=0; i<N; i++) {
+            for (int j=0; j<M; j+=2) {
+                if (seat[i][j]) {
+                    add_edge(src, ptoi(i, j), 1, 0);
+                    if (i>0 && j>0 && seat[i-1][j-1]) add_edge(ptoi(i, j), ptoi(i-1, j-1), 1, 0);
+                    if (j>0 && seat[i][j-1]) add_edge(ptoi(i, j), ptoi(i, j-1), 1, 0);
+                    if (j>0 && i<N-1 && seat[i+1][j-1]) add_edge(ptoi(i, j), ptoi(i+1, j-1), 1, 0);
+                    if (i>0 && j<M-1 && seat[i-1][j+1]) add_edge(ptoi(i, j), ptoi(i-1, j+1), 1, 0);
+                    if (j<M-1 && seat[i][j+1]) add_edge(ptoi(i, j), ptoi(i, j+1), 1, 0);
+                    if (j<M-1 && i<N-1 && seat[i+1][j+1]) add_edge(ptoi(i, j), ptoi(i+1, j+1), 1, 0);
+                }
+            }
+        }
+        for (int i=0; i<N; i++) {
+            for (int j=1; j<M; j+=2) {
+                if (seat[i][j]) {
+                    add_edge(ptoi(i, j), sink, 1, 0);
+                }
+            }
+        }
+        auto [mc, mf] = match(src, sink);
+        cout<<total-mf<<endl;
     }
-    for (int i=0; i<N; i++) {
-        add_edge(src, 1+i, 2, 0);
-    }
-    for (int i=0; i<M; i++) {
-        add_edge(N+1+i, sink, 1, 0);
-    }
-    auto [mc, mf] = match(src, sink);
-    cout<<mf<<endl;
 }
 
 int main() {
