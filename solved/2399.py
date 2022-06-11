@@ -1,2 +1,2 @@
-input();a=sorted([*map(int,input().split())])
-print(2*sum((2*d-len(a)+1)*a[d]for d in range(len(a))))
+n=int(input())
+print(2*sum(x*(i+i-n+1)for i,x in enumerate(sorted(map(int,input().split())))))

@@ -92,8 +92,23 @@ int main() {
 
     ll N; cin>>N;
     vector<ll> factors = factorize(N);
-    sort(factors.begin(), factors.end());
+    factors.push_back(0);
+    ll mul = 1;
+    ll now = -1;
+    ll len = 0;
     for (ll fac: factors) {
-        cout<<fac<<endl;
+        if (len == 0) {
+            now = fac;
+            len = 1;
+        } else {
+            if (now == fac) {
+                len++;
+            } else {
+                mul *= len+1;
+                len = 1;
+                now = fac;
+            }
+        }
     }
+    cout<<mul<<endl;
 }
