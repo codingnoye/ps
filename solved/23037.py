@@ -1,0 +1,1 @@
+print(sum(int(c)**5for c in input()))
