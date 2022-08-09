@@ -6,33 +6,47 @@ typedef long long ll;
 
 const int SEG_SIZE = 1<<17;
 // 1<<17 = 131072, 1<<20 = 1048576
+
+struct node {
+    int color=0, depth=999999999, id=0;
+};
+
+node op(node a, node b) {
+    if (a.id == 0) return b;
+    if (b.id == 0) return a;
+    if (a.color < b.color) swap(a, b);
+    if (a.color > b.color) return a;
+    if (a.depth < b.depth) return a;
+    return b;
+}
+
 struct Seg {
-    ll tree[SEG_SIZE << 1];
+    node tree[SEG_SIZE << 1];
     int sz = SEG_SIZE;
     
     void init() {
         int x = sz-1;
         while (x) {
-            tree[x] = max(tree[x << 1], tree[x << 1 | 1]); // op
+            tree[x] = op(tree[x << 1], tree[x << 1 | 1]); // op
             x--;
         }
     }
 
-    void update(int x, ll v){
+    void update(int x){
         x |= sz; 
-        tree[x] = v; // update
+        tree[x] = {1 - tree[x].color, tree[x].depth, tree[x].id}; // update
         while(x >>= 1){
-            tree[x] = max(tree[x << 1], tree[x << 1 | 1]); // op
+            tree[x] = op(tree[x << 1], tree[x << 1 | 1]); // op
         }
     }
 
     // [l, r]
-    ll query(int l, int r){
+    node query(int l, int r){
         l |= sz, r |= sz;
-        ll ret = 0;
+        node ret = {0, 999999999, 0};
         while(l <= r){
-            if(l & 1) ret = max(ret, tree[l++]);
-            if(~r & 1) ret = max(ret, tree[r--]);
+            if(l & 1) ret = op(ret, tree[l++]); // op
+            if(~r & 1) ret = op(ret, tree[r--]); // op
             l >>= 1, r >>= 1;
         }
         return ret;
@@ -76,55 +90,48 @@ void dfs2(int v = 1){
 	out[v] = pv;
 }
 
-void update(int v, int w){
-    seg.update(in[v], w);
+void update(int v){
+    seg.update(in[v]);
 }
 
-ll query(int a, int b){
-    ll ret = 0;
+node query(int a, int b){
+    node ret = {0, 999999999, 0};
     // 다른 체인인 동안, 아래인 체인 끌어올림
     while(top[a] != top[b]){
         if(dep[top[a]] < dep[top[b]]) swap(a, b);
-        ret = max(ret, seg.query(in[top[a]], in[a])); // op
+        ret = op(ret, seg.query(in[top[a]], in[a])); // op
         a = par[top[a]];
     }
     // 같은 체인
     if(dep[a] > dep[b]) swap(a, b);
-    ret = max(ret, seg.query(in[a]+1, in[b])); // op
+    ret = op(ret, seg.query(in[a], in[b])); // op
     return ret;
 }
 
 int main() {
     fastio;
-    int N, Q; cin>>N;
-
-    vector<pair<pair<pair<int, int>, int>, int>> inps;
-    vector<int> edge_to_node(N);
+    int N; cin>>N;
     for (int i=0; i<N-1; i++) {
-        int u, v, w; cin>>u>>v>>w;
+        int u, v; cin>>u>>v;
         inp[u].push_back(v);
         inp[v].push_back(u);
-        inps.push_back({{{u, v}, i+1}, w});
-        inps.push_back({{{v, u}, i+1}, w});
     }
     dfs(); dfs1(); dfs2();
-
-    for (auto& [edge, w]: inps) {
-        auto [uv, id] = edge;
-        auto [u, v] = uv;
-        if (par[u] != v) continue;
-        update(u, w);
-        edge_to_node[id] = u;
+    
+    for (int i=1; i<=N; i++) {
+        seg.tree[seg.sz+in[i]] = {0, dep[i], i};
     }
+    seg.init();
 
-    cin>>Q;
-
-    while (Q--) {
-        int t, u, v; cin>>t>>u>>v;
+    int M; cin>>M;
+    for (int i=0; i<M; i++) {
+        int t, u; cin>>t>>u;
         if (t==1) {
-            update(edge_to_node[u], v);
+            update(u);
         } else {
-            cout<<query(u, v)<<endl;
+            node res = query(1, u);
+            if (res.color == 0) cout<<"-1"<<endl;
+            else cout<<res.id<<endl;
         }
     }
 }

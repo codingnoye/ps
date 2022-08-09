@@ -4,7 +4,7 @@
 using namespace std;
 typedef long long ll;
 
-const int SEG_SIZE = 1<<17;
+const int SEG_SIZE = 1<<18;
 // 1<<17 = 131072, 1<<20 = 1048576
 struct Seg {
     ll tree[SEG_SIZE << 1];
@@ -39,7 +39,7 @@ struct Seg {
     }
 } seg;
 
-const int MAXV = 101010;
+const int MAXV = 201010;
 int sz[MAXV], dep[MAXV], par[MAXV], top[MAXV], in[MAXV], out[MAXV];
 // 크기, 깊이, 부모, 체인의 top, dfs ordering
 // 세그트리 인덱싱: in[i]
@@ -96,35 +96,27 @@ ll query(int a, int b){
 
 int main() {
     fastio;
-    int N, Q; cin>>N;
+    int N, Q; cin>>N>>Q;
 
-    vector<pair<pair<pair<int, int>, int>, int>> inps;
-    vector<int> edge_to_node(N);
-    for (int i=0; i<N-1; i++) {
-        int u, v, w; cin>>u>>v>>w;
-        inp[u].push_back(v);
-        inp[v].push_back(u);
-        inps.push_back({{{u, v}, i+1}, w});
-        inps.push_back({{{v, u}, i+1}, w});
+    for (int i=2; i<=N; i++) {
+        int x; cin>>x;
+        inp[x].push_back(i);
+        inp[i].push_back(x);
     }
     dfs(); dfs1(); dfs2();
-
-    for (auto& [edge, w]: inps) {
-        auto [uv, id] = edge;
-        auto [u, v] = uv;
-        if (par[u] != v) continue;
-        update(u, w);
-        edge_to_node[id] = u;
-    }
-
-    cin>>Q;
-
     while (Q--) {
-        int t, u, v; cin>>t>>u>>v;
-        if (t==1) {
-            update(edge_to_node[u], v);
+        int b, c, d; cin>>b>>c>>d;
+        int res = query(b, c);
+        if (d == 0) {
+            cout<<(res==0?"YES":"NO")<<endl;
         } else {
-            cout<<query(u, v)<<endl;
+            if (res == 0) {
+                cout<<"YES"<<endl;
+                update(b, 1);
+            } else {
+                cout<<"NO"<<endl;
+                update(c, 1);
+            }
         }
     }
 }
