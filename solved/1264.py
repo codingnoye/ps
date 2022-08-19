@@ -1,0 +1,1 @@
+for i in[*open(0)][:-1]:print(sum(x in'aeiouAEIOU'for x in i))
