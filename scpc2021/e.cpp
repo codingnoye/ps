@@ -1,4 +1,5 @@
 #include <bits/stdc++.h>
+<<<<<<< HEAD
 #include <complex>
 #define fastio cin.tie(0)->sync_with_stdio(0)
 // #define endl '\n'
@@ -134,5 +135,22 @@ int main() {
             ans ^= ans_for_k;
         }
         cout<<"Case #"<<t<<endl<<ans<<endl;
+=======
+#define ff(i, s, e) for (int i=s; i<e; i++)
+using namespace std;
+typedef long long ll;
+
+int main() {
+    ios_base::sync_with_stdio(false);
+    cout.tie(NULL);
+    
+    int T; cin>>T;
+    ff(C, 1, T+1) {
+        ll ans = 0;
+
+        // code here
+
+        cout<<"Case #"<<C<<endl<<ans<<endl;
+>>>>>>> 2d8c2d02d42975dbb79638bed5e25557b3f26cd5
     }
 }
