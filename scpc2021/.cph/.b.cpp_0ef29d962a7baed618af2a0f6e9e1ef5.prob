@@ -1,1 +1,0 @@
-{"name":"Local: b","url":"/Users/noye/workspace/1day1ps/scpc/b.cpp","tests":[{"id":1659747670540,"input":"2\n7\n1 2 1 1 2 1 2\n6\n1 2 3 3 2 1","output":"Case #1\n10\nCase #2\n9"}],"interactive":false,"memoryLimit":1024,"timeLimit":3000,"srcPath":"/Users/noye/workspace/1day1ps/scpc/b.cpp","group":"local","local":true}
