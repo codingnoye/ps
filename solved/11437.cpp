@@ -1,47 +1,84 @@
-#include <iostream>
-#include <vector>
-#include <queue>
+#include <bits/stdc++.h>
+#define fastio cin.tie(0)->sync_with_stdio(0)
+#define endl '\n'
 using namespace std;
+typedef long long ll;
 
-int parent[50001] = {0};
-int depth[50001] = {0};
-vector<vector<int> > graph;
+typedef vector<vector<int>> adj_list;
+
+// undirected tree -> rooted tree
+adj_list make_rooted_tree(adj_list& G, int root) {
+    adj_list rooted_graph(G.size());
+    function<void(int, int)> dfs = [&] (int now, int from) {
+        for (int near: G[now]) {
+            if (near == from) continue;
+            rooted_graph[now].push_back(near);
+            dfs(near, now);
+        }
+    };
+    dfs(root, -1);
+    return rooted_graph;
+}
+
+class LCA {
+    adj_list tree;
+    vector<int> depths;
+    vector<vector<int>> ancestors;
+public:
+    LCA (adj_list& tr, int root) {
+        tree = tr;
+        int N = tree.size();
+        ancestors = vector<vector<int>>(N);
+        depths = vector<int>(N);
+
+        function<void(int, int, int)> dfs = [&] (int now, int par, int depth) {
+            depths[now] = depth;
+            for (int i=0, d=1; d<=depth; d<<=1, i++) {
+                if (d==1) {
+                    ancestors[now].push_back(par);
+                } else {
+                    ancestors[now].push_back(ancestors[ancestors[now][i-1]][i-1]);
+                }
+            }
+            for (int child: tree[now]) {
+                dfs(child, now, depth+1);
+            }
+        };
+        dfs(root, root, 0);
+    }
+    int find(int u, int v) {
+        if (depths[u] < depths[v]) swap(u, v);
+        int dv = depths[v];
+        while (depths[u] > dv) {
+            int diff = dv - depths[u];
+            int jump = 0, jumpd = 1;
+            while (jumpd<<1 <= diff) jumpd<<=1, jump++;
+            u = ancestors[u][jump];
+        }
+        while (u != v) {
+            u = ancestors[u][0];
+            v = ancestors[v][0];
+        }
+        return u;
+    }
+};
 
 int main() {
+    fastio;
+    
     int N; cin>>N;
-    graph.resize(N+1);
-    for (int i=2; i<=N; i++) {
-        int a, b; cin>>a>>b;
-        graph[a].push_back(b);
-        graph[b].push_back(a);
+    adj_list G(N+1);
+    for (int i=0; i<N-1; i++) {
+        int u, v; cin>>u>>v;
+        G[u].push_back(v);
+        G[v].push_back(u);
     }
-    parent[1] = 1;
-    depth[1] = 1;
-    queue<int> q;
-    q.push(1);
-    // 트리 빌드
-    while (!q.empty()) {
-        int now = q.front();
-        q.pop();
-        for (int to: graph[now]) {
-            if (parent[to]==0) { // 방문 체크
-                parent[to] = now;
-                depth[to] = depth[now]+1;
-                q.push(to);
-            }
-        }
-    }
+    adj_list rooted_tree = make_rooted_tree(G, 1);
+    LCA lca(rooted_tree, 1);
+    
     int M; cin>>M;
     while (M--) {
-        int a, b; cin>>a>>b;
-        if (depth[a] <= depth[b]) swap(a, b);
-        while (depth[a] > depth[b]) {
-            a = parent[a];
-        }
-        while (a!=b) {
-            a = parent[a];
-            b = parent[b];
-        }
-        cout<<a<<'\n';
+        int u, v; cin>>u>>v;
+        cout<<lca.find(u, v)<<endl;
     }
 }

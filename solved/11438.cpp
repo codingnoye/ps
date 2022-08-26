@@ -1,58 +1,68 @@
-#include <iostream>
-#include <vector>
-#include <queue>
+#include <bits/stdc++.h>
+#define fastio cin.tie(0)->sync_with_stdio(0)
+#define endl '\n'
 using namespace std;
+typedef long long ll;
 
-int parent[100001][21] = {0}; //parent[x][y] = 2^yth parent of x
-int depth[100001] = {0};
-vector<vector<int> > graph;
+typedef vector<vector<int>> adj_list;
 
-int main() {
-    int N; scanf("%d", &N);
-    graph.resize(N+1);
-    for (int i=2; i<=N; i++) {
-        int a, b; scanf("%d %d", &a, &b);
-        graph[a].push_back(b);
-        graph[b].push_back(a);
-    }
-    parent[0][0] = 0;
-    parent[1][0] = 1;
-    depth[1] = 1;
-    queue<int> q;
-    q.push(1);
-    // 트리 빌드
-    while (!q.empty()) {
-        int now = q.front();
-        q.pop();
-        for (int to: graph[now]) {
-            if (parent[to][0]==0) { // 방문 체크
-                parent[to][0] = now;
-                depth[to] = depth[now]+1;
-                q.push(to);
+class LCA {
+    vector<int> depths;
+    vector<vector<int>> ancestors;
+public:
+    LCA (adj_list& tree, int root) {
+        int N = tree.size();
+        ancestors = vector<vector<int>>(N);
+        depths = vector<int>(N);
+        
+        queue<int> q; q.push(root);
+        ancestors[root].push_back(root);
+        while (!q.empty()) {
+            int now = q.front(); q.pop();
+            int depth = depths[now];
+            for (int i=1, d=2; d<=depth; d<<=1, i++) {
+                ancestors[now].push_back(ancestors[ancestors[now][i-1]][i-1]);
+            }
+            for (int child: tree[now]) {
+                if (ancestors[now][0] == child) continue;
+                ancestors[child].push_back(now);
+                depths[child] = depth+1;
+                q.push(child);
             }
         }
     }
-    for (int j=1; j<21; j++) {
-        for (int i=1; i<=N; i++) {
-            parent[i][j] = parent[parent[i][j-1]][j-1];
+    int find(int u, int v) {
+        if (depths[u] < depths[v]) swap(u, v);
+        int dv = depths[v];
+        while (depths[u] > dv) {
+            int diff = depths[u] - dv;
+            int jump = 0, jumpd = 1;
+            while (jumpd<<1 <= diff) jumpd<<=1, jump++;
+            u = ancestors[u][jump];
         }
+        while (u != v) {
+            int jump;
+            for (jump=1; jump<ancestors[u].size() && ancestors[u][jump]!=ancestors[v][jump]; jump++);
+            u = ancestors[u][jump-1];
+            v = ancestors[v][jump-1];
+        }
+        return u;
     }
+};
+
+int main() {
+    int N; scanf("%d", &N);
+    adj_list G(N+1);
+    for (int i=0; i<N-1; i++) {
+        int u, v; scanf("%d %d", &u, &v);
+        G[u].push_back(v);
+        G[v].push_back(u);
+    }
+    LCA lca(G, 1);
+    
     int M; scanf("%d", &M);
     while (M--) {
-        int a, b; scanf("%d %d", &a, &b);
-        if (depth[a] <= depth[b]) swap(a, b);
-        while (depth[a] > depth[b]) {
-            int delta = depth[a] - depth[b];
-            int s=0;
-            for (int i=1; i<=delta; i<<=1) s++; // 1 2 4 8 / 0 1 2 3
-            a = parent[a][s-1];
-        }
-        while (a!=b) {
-            int i;
-            for (i=1; parent[a][i]!=parent[b][i]; i++);
-            a = parent[a][i-1];
-            b = parent[b][i-1];
-        }
-        printf("%d\n", a);
+        int u, v; scanf("%d %d", &u, &v);
+        printf("%d\n", lca.find(u, v));
     }
 }
