@@ -1,1 +1,0 @@
-print(max(eval("sum(map(int,input().split())),"*2)))

@@ -1,1 +1,0 @@
-i=input;exec('i();print(sum(map(int,i().split())));'*int(i()))

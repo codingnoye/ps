@@ -1,1 +1,0 @@
-import sys;r=sys.stdin.readline;exec("N,M=map(int,r().split());exec('r();'*M);print(N-1);"*int(r()))

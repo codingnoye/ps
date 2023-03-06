@@ -1,1 +1,0 @@
-input();print(sum(a+1!=int(b)for a,b in enumerate(input().split())))

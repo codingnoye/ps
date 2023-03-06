@@ -1,1 +1,0 @@
-print(sum(map(lambda a:int(a[1])%int(a[0]),eval('input().split(),'*int(input())))))

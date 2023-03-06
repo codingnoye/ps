@@ -1,1 +1,0 @@
-print('divide by zero'if input()<'1'else input()and'1.00')

@@ -1,1 +1,0 @@
-n=input();print(*sorted(n[i:]for i in range(len(n))))

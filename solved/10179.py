@@ -1,1 +1,0 @@
-for _ in[0]*int(input()):print('$%.2f'%(float(input())*0.8))

@@ -1,1 +1,0 @@
-print(*[a for a,b in enumerate(open(0),1)if'FBI'in b]or['HE GOT AWAY!'])

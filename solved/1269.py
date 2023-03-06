@@ -1,1 +1,0 @@
-input();print(len({*input().split()}^{*input().split()}))

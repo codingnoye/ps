@@ -1,1 +1,0 @@
-print(['YONSEI','Leading the Way to the Future'][input()>'0'])

@@ -1,1 +1,0 @@
-print(0+(bin(int(input())).count('1')==1))

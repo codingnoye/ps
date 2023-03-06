@@ -1,1 +1,0 @@
-print(['NO','YES'][input().startswith('555')])

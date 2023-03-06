@@ -1,1 +1,0 @@
-print('CSYK'[3!=int(input())%7!=1::2])
