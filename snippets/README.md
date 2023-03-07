@@ -24,16 +24,16 @@ description: ps 기본 템플릿을 생성합니다.
 
 # 목록
 ## 0. 기타
-### 00. 템플릿
+### 0.0. 템플릿
 - `ps` : ps 템플릿
 - `pss` : ps 심플 템플릿
 - `cpp` : cpp 기본 템플릿
-### 01. cheet sheet
+### 0.1. cheet sheet
 - `comp` : 좌표압축
 ## 1. 그래프
-### 10. 그래프 기본
+### 1.0. 그래프 기본
 - `uf` : union-find
-### 11. 최단경로
+### 1.1. 최단경로
 - `dijkstra` : 다익스트라
 - `bellmanford` : 벨만포드
 - `spfa` : SPFA

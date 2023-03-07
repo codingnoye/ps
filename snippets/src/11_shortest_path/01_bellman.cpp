@@ -1,3 +1,8 @@
+/*!
+prefix: bellman
+title: 벨만-포드
+description: 음수 허용 1->V 최단거리, O(VE)
+!*/
 #include <bits/stdc++.h>
 #define fastio cin.tie(0)->sync_with_stdio(0)
 #ifdef ONLINE_JUDGE
@@ -8,18 +13,6 @@
 using namespace std;
 typedef long long ll;
 
-int main() {
-    fastio;
-    
-    ll N; cin>>N;
-    ll i = 1;
-    ll now = 0;
-    while (true) {
-        now += i;
-        
-        if (N < now) break;
-
-        i++;
-    }
-    cout<<i-1<<endl;
-}
+//[
+//WIP
+//]

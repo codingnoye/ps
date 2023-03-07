@@ -2,15 +2,20 @@
 import os
 import json
 
-# get all '000_title.cpp' filenames from current directory
-files = [f for f in os.listdir('src') if f.endswith('.cpp')]
+# get all .cpp file paths from directory, recursive with os.walk
+dir = 'src'
+files = []
+for (path, dir, filenames) in os.walk(dir):
+    for filename in filenames:
+        ext = os.path.splitext(filename)[-1]
+        if ext == '.cpp':
+            files.append(os.path.join(path, filename))
 files.sort()
-
 # from files, make snippets
 # file is '000_title.cpp'
 snippets = {}
 for file in files:
-    with open('src/'+file, 'r') as f:
+    with open(file, 'r') as f:
         now_header = False
         now_interest = False
         body = []
