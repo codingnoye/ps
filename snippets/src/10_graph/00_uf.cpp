@@ -14,9 +14,6 @@ using namespace std;
 typedef long long ll;
 
 //[
-/*
-mst: <비용, u, v> 정렬해서 작은것부터 보면서, 라벨 다르면 union
-*/
 class UF {
 public:
     vector<int> parent;
