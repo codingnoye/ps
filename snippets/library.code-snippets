@@ -72,6 +72,26 @@
         ],
         "description": "좌표압축 (justicehui)"
     },
+    "Auto id": {
+        "scope": "cpp",
+        "prefix": "aid",
+        "body": [
+            "template <typename T> class Aid {",
+            "public:",
+            "    map<T, int> kv;",
+            "    int i = 0;",
+            "    int operator[](T key) {",
+            "        auto found = kv.find(key);",
+            "        if (found == kv.end()) {",
+            "            kv[key] = i;",
+            "            return i++;",
+            "        }",
+            "        return found->second;",
+            "    }",
+            "};"
+        ],
+        "description": "T -> int 매핑"
+    },
     "Union-find": {
         "scope": "cpp",
         "prefix": "uf",
@@ -103,35 +123,73 @@
         ],
         "description": "Union-find"
     },
+    "다익스트라": {
+        "scope": "cpp",
+        "prefix": "dijkstra",
+        "body": [
+            "typedef pair<int, int> pii;",
+            "const int INF = 987654321;",
+            "",
+            "// G: weighted adjlist, graph[n] = [<neighbor of n, dist>]",
+            "vector<int> get_dist(vector<vector<pii>>& graph, int s) {",
+            "    int N = graph.size();",
+            "    vector<int> dist(N);",
+            "    vector<int> from(N);",
+            "    vector<bool> visited(N);",
+            "    for (int i=0; i<N; i++) {",
+            "        dist[i] = INF;",
+            "        visited[i] = false;",
+            "    }",
+            "    priority_queue<pii, vector<pii>, greater<pii>> pq;",
+            "    pq.push({0, s});",
+            "    dist[s] = 0;",
+            "",
+            "    while (!pq.empty()) {",
+            "        auto [nowd, now] = pq.top(); pq.pop();",
+            "        if (visited[now]) continue;",
+            "        for (auto [near, cost]: graph[now]) {",
+            "            if (visited[near]) continue;",
+            "            if (dist[near] > nowd + cost) {",
+            "                dist[near] = nowd + cost;",
+            "                from[near] = cost;",
+            "            }",
+            "            pq.push({dist[near], near});",
+            "        }",
+            "        visited[now] = true;",
+            "    }",
+            "    return dist;",
+            "}"
+        ],
+        "description": "1<->V 최단거리, O((V+E) log V), 양방향 가능"
+    },
+    "벨만-포드": {
+        "scope": "cpp",
+        "prefix": "bellman",
+        "body": [
+            "//WIP"
+        ],
+        "description": "음수 허용 1->V 최단거리, O(VE)"
+    },
     "플로이드-와샬": {
         "scope": "cpp",
         "prefix": "floyd",
         "body": [
-            "/*",
-            "mst: <비용, u, v> 정렬해서 작은것부터 보면서, 라벨 다르면 union",
-            "*/",
-            "class UF {",
-            "public:",
-            "    vector<int> parent;",
-            "    UF (int n) {",
-            "        parent = vector<int>(n);",
-            "        for (int i=0; i<n; i++) parent[i] = i;",
+            "// G is N*N weighted adjmat",
+            "const int INF = 987654321;",
+            "vector<vector<int>> floyd(vector<vector<int>>& G) {",
+            "    int N = sz(G);",
+            "    vector<vector<int>> dists(G);",
+            "    for (int m=0; m<N; m++) { // 경유 노드",
+            "        for (int s=0; s<N; s++) { // 출발 노드",
+            "            for (int e=0; e<N; e++) { // 도착 노드",
+            "                if (s==e) continue;",
+            "                dists[s][e] = min(dists[s][e], dists[s][m] + dists[m][e]);",
+            "            }",
+            "        }",
             "    }",
-            "    int f(int x) {",
-            "        int px = parent[x];",
-            "        if (px == x) return x;",
-            "        return parent[x] = f(px);",
-            "    }",
-            "    bool u(int x, int y) {",
-            "        int px = f(x);",
-            "        int py = f(y);",
-            "        if (px == py) return false;",
-            "        if (px < py) swap(px, py);",
-            "        parent[px] = py;",
-            "        return true;",
-            "    }  ",
-            "};"
+            "    return dists;",
+            "}"
         ],
-        "description": "모든 노드에서 모든 노드로 최단거리, O($N^3$)"
+        "description": "모든 V<->V 최단거리, O(N^3)"
     }
 }
